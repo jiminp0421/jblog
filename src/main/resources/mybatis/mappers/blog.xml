@@ -3,13 +3,36 @@
 
 <mapper namespace="blog">
 
+<!-- 블로그 메인가져오기 -->
 <select id="blogMainList" parameterType="String" resultType="com.javaex.vo.BlogVo">
 	<![CDATA[
-		select id,blogtitle, logofile
-		from blog
-		where id = #{id}
+		select  b.id,
+				u.userName,
+        		b.blogtitle,
+        		b.logofile
+		from users u, blog b
+		where b.id = u.id 
+		and b.id = #{id}
 	]]>
 </select>
+
+<!-- 기본설정 타이틀 가져오기 -->
+<update id="blogUpdate" parameterType="com.javaex.vo.BlogVo">
+	<![CDATA[
+		UPDATE blog
+		SET blogtitle = #{blogTitle}
+	]]>
+	
+	<if test = 'logoFile != ""'>
+		,logofile = <![CDATA[
+			#{logoFile}
+		]]>
+	</if>
+	<![CDATA[
+		WHERE id = #{id}
+	]]>
+	
+</update>
 
 
 </mapper>

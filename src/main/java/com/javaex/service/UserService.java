@@ -24,7 +24,7 @@ public class UserService {
 		
 		blogVo.setId(userVo.getId());
 		blogVo.setBlogTitle(userVo.getUserName()+"의 블로그입니다.");
-		blogVo.setLogoFile("spring-logo.jpg");
+		blogVo.setLogoFile("default");
 		
 		categoryVo.setId(userVo.getId());
 		categoryVo.setCateName("미분류");
