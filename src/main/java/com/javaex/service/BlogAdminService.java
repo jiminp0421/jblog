@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.javaex.dao.BlogDao;
 import com.javaex.vo.BlogVo;
 import com.javaex.vo.CategoryVo;
+import com.javaex.vo.PostVo;
 
 @Service
 public class BlogAdminService {
@@ -65,14 +66,41 @@ public class BlogAdminService {
 		return blogDao.updateBlogBasic(blogVo);
 	}
 	
-	//카테고리 ajax
-	public List<CategoryVo> adminCateService(String id) {
-		System.out.println("카테고리 서비스");
-		
-		
-		
-		return blogDao.adminCateDao(id);
+	
+	
+	 //카테고리 ajax 
+	public List<CategoryVo> adminCateListService(String id) {
+	 	System.out.println("카테고리 서비스");
+	 
+	 	return blogDao.adminCateSelectList(id); 
+	 	
 	}
+	
+	//카테고리 추가 ajax
+	public CategoryVo addCateService(String id, String cateName, String description) {
+		System.out.println("카테고리 추가 서비스");
+		
+		CategoryVo vo = new CategoryVo(id,cateName,description);
+		blogDao.addCateInsert(vo);
+		
+		return vo;
+	}
+	
+	public int removeCateService(int cateNo) {
+		System.out.println("카테고리 삭제 서비스");
+		
+		
+		return blogDao.cateDelete(cateNo);
+	}
+	
+	//카테고리 글작성
+	public int adminCateWriteService(String id, PostVo postVo) {
+		System.out.println("카테고리 글 작성 서비스");
+		
+		return blogDao.cateWriteInsert(id, postVo);
+	}
+
+
 	
 
 }

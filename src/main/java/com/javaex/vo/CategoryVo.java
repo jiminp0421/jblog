@@ -13,6 +13,12 @@ public class CategoryVo {
 	
 	public CategoryVo() {}
 	
+	public CategoryVo(String id, String cateName, String description) {
+		this.id = id;
+		this.cateName = cateName;
+		this.description = description;
+	}
+	
 	
 	public CategoryVo(int cateNo, String id, String cateName, String description, String regDate, int cateCount) {
 		this.cateNo = cateNo;

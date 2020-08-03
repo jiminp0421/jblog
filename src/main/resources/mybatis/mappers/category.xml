@@ -15,22 +15,51 @@
 	]]>
 </select>
 
-<select id="admincategory" parameterType="String" resultType="com.javaex.vo.CategoryVo">
+<select id="adminCateSelectList" parameterType="String" resultType="com.javaex.vo.CategoryVo">
 	<![CDATA[
-	SELECT  cate.cateno as "cateNo",
-        	cate.catename as "cateName",
-        	caca.catecount as "cateCount",
-        	cate.description as "description"
-	FROM category cate,(SELECT c.cateno,count(p.cateno) cateCount
-                    	FROM category c left outer join post p
-                    	on c.cateno = p.cateno
-                    	GROUP by c.cateno) caca
-	WHERE cate.cateno = caca.cateno
-	AND cate.id = #{id}
-	ORDER by cate.cateno asc
+		SELECT
+			c.cateno,
+			c.catename,
+			c.description,
+			p.count as cateCount
+		FROM
+		    category c,
+		    (SELECT
+		        cateno,
+		        count(postNo) count
+		    FROM
+		        post
+		    group by cateno) p
+		WHERE
+		    id = #{id}
+		AND
+		    c.cateno = p.cateno(+)
 	]]>
 </select>
 
+<insert id="addCateInsert" parameterType="com.javaex.vo.CategoryVo">
+	<selectKey keyProperty="cateNo" resultType="int" order="BEFORE">
+			select SEQ_CATEGORY_NO.nextval from dual
+	</selectKey>
+	<![CDATA[
+		INSERT INTO category
+		VALUES(#{cateNo}, #{id}, #{cateName}, #{description}, SYSDATE)
+	]]>
+</insert>
+
+<delete id="cateDelete" parameterType="int">
+	<![CDATA[
+	delete from category 
+	where cateno = #{cateNo}
+	]]>
+</delete>
+
+<insert id="insertPost" parameterType="com.javaex.vo.PostVo">
+	<![CDATA[
+		INSERT INTO post
+		VALUES (SEQ_POST_NO.nextval, #{cateNo}, #{postTitle}, #{postContent}, SYSDATE)
+	]]>
+</insert>
 
 
 </mapper>

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.javaex.vo.BlogVo;
 import com.javaex.vo.CategoryVo;
+import com.javaex.vo.PostVo;
 
 
 @Repository
@@ -26,7 +27,7 @@ public class BlogDao {
 		
 	}
 	
-	//블로그 카테고리 다오
+	//블로그 카테고리 다오, 글쓰기
 	public List<CategoryVo> blogCategoryList(String id) {
 		System.out.println("블로그카테고리 다오");
 		
@@ -44,13 +45,38 @@ public class BlogDao {
 	}
 	
 	
-	//admin 카테고리 관리
-	public List<CategoryVo> adminCateDao(String id) {
+	
+	 //admin 카테고리 관리 
+	public List<CategoryVo> adminCateSelectList(String id) {
 		System.out.println("admin카테고리 다오");
+	 
+		return sqlSession.selectList("category.adminCateSelectList", id); 
 		
-		return sqlSession.selectList("category.admincategory", id);
 	}
 	
+	//카테고리 추가 ajax
+	public int addCateInsert(CategoryVo categoryVo) {
+		System.out.println("adminAddCate");
+		System.out.println(categoryVo.toString());
+		
+		return sqlSession.insert("category.addCateInsert",categoryVo);
+	}
+	 
+	
+	//카테고리 삭제
+	public int cateDelete(int cateNo) {
+		System.out.println("카테고리 삭제 다오");
+		
+		return sqlSession.delete("category.cateDelete", cateNo);
+	}
+	
+
+	//카테고리 글작성
+	public int cateWriteInsert(String id, PostVo postVo) {
+		System.out.println("카테고리 글작성 다오.");
+		
+		return sqlSession.insert("category.insertPost", postVo);
+	}
 	
 
 	

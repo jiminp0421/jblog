@@ -22,9 +22,9 @@
 
 		<div id="content">
 			<ul id="admin-menu" class="clearfix">
-				<li class="tabbtn"><a href="">기본설정</a></li>
+				<li class="tabbtn"><a href="${pageContext.request.contextPath}/${authUser.id}/admin/basic">기본설정</a></li>
 				<li class="tabbtn selected"><a href="${pageContext.request.contextPath}/${authUser.id}/admin/category">카테고리</a></li>
-				<li class="tabbtn"><a href="">글작성</a></li>
+				<li class="tabbtn"><a href="${pageContext.request.contextPath}/${authUser.id}/admin/writeForm">글작성</a></li>
 			</ul>
 			<!-- //admin-menu -->
 			
@@ -47,7 +47,7 @@
 			      			<th>삭제</th>      			
 			      		</tr>
 		      		</thead>
-		      		<tbody id="cateList">
+		      		<tbody id="cateListArea">
 		      			<!-- 리스트 영역 -->
 		      			
 						
@@ -98,25 +98,23 @@ $(document).ready(function(){
 
 
 function fetchList(){
-	var id = "${authUser.id}";
-	console.log(id);
 	$.ajax({
-			
-			url : "${pageContext.request.contextPath }/{id}",		
+			//보내줄경우
+			url : "${pageContext.request.contextPath}/${authUser.id}/admin/cateList",		
 			type : "post",
 			//contentType : "application/json",
-			data : {id : id},
+			//data : {id : id},
 			
-			
+			//받아올경우
 			dataType : "json",
-			success : function(guestbookList){
-				console.log(guestbookList);
+			success : function(cateList){
+				console.log(cateList);
 				/*성공시 처리해야될 코드 작성*/
 				//$("#guestbookListArea").html()
 				
 				
-				for(var i=0; i<guestbookList.length; i++){
-					render(guestbookList[i]);
+				for(var i=0; i<cateList.length; i++){
+					render(cateList[i]);
 				}
 				
 			},
@@ -129,23 +127,93 @@ function fetchList(){
 }
 		
 
-function render(guestVo) {
-	var str ="";
+function render(cateList) {
+	var str =""; //10+10=20, "10"+"10" = "1010"
 	str +="<tr>"
-	str +=""
-	str += "<td>${cateList.cateNo}</td>"
-	str += "<td>${cateList.cateName}</td>"
-	str += "<td>${cateList.cateCount}</td>"
-	str += "<td>${cateList.description}</td>"
+	str += "<td>"+cateList.cateNo+"</td>"
+	str += "<td>"+cateList.cateName+"</td>"
+	str += "<td>"+cateList.cateCount+"</td>"
+	str += "<td>"+cateList.description+"</td>"
     str += "<td class='text-center'>"
-    str += "<img class='btnCateDel' src='${pageContext.request.contextPath}/assets/images/delete.jpg'>"
+    str += "<img class='btnCateDel' data-cateCount = "+ cateList.cateCount +" data-cateno = "+ cateList.cateNo +" src='${pageContext.request.contextPath}/assets/images/delete.jpg'>"
     str += "</td>"
 	str += "</tr>"
 	
 	
-	$("#guestbookListArea").prepend(str);
+	$("#cateListArea").prepend(str);
 	
 }
+
+
+
+//카테고리추가 ajax
+$("#btnAddCate").on("click",function(){
+	console.log("btnAddCate.click");
+	
+	var cateName = $("[ name = name ]").val();
+	var description = $("[ name = desc ]").val();
+	
+	$.ajax({
+		//보내줄경우
+		url : "${pageContext.request.contextPath}/${authUser.id}/admin/addCate",		
+		type : "post",
+		//contentType : "application/json",
+		data : {cateName : cateName, description : description},
+		
+		//받아올경우
+		dataType : "json",
+		success : function(cateVo){
+			console.log(cateVo);
+			render(cateVo);
+			
+		},
+		error : function(XHR, status, error) {
+			console.error(status + " : " + error);
+		}
+		
+	});
+});
+
+
+//카테고리 삭제
+$("#cateListArea").on("click",".btnCateDel", function(){
+	var thisArea = $(this)
+	var count = thisArea.data("catecount");
+	console.log("btnCateDel.click, "+thisArea+count);
+	
+	var no = thisArea.data("cateno");
+	console.log("btnCateDel" +thisArea+no);
+	
+	if(count !=0){
+		console.log("없어지면 안돼");
+		alert("삭제할 수 없습니다.");
+	}else {
+		console.log("넌 없어져");
+		
+		$.ajax({
+			//보내줄경우
+		    type: "post",
+		    url: "${pageContext.request.contextPath}/${authUser.id}/admin/removeCate",
+		    //dataType: 'json',
+		    data: {cateNo : no},
+		    
+		    
+		  	//받아줄경우
+		    success: function(data){
+		       // success
+		       
+		       if(data>0){
+		    	   console.log("1."+thisArea.parents("tr"));
+		    	   thisArea.parents("tr").remove();
+		    	   
+		       }
+		    }    
+		})
+	}
+	
+});
+
+
 </script>
 
 

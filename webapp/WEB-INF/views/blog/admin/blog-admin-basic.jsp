@@ -21,7 +21,7 @@
 		<div id="content">
 			<ul id="admin-menu" class="clearfix">
 			<c:if test="${admin == 'basic'}">
-				<li class="tabbtn selected"><a href="${pageContext.request.contextPath}/${authUser.id}/admin/upload">기본설정</a></li>
+				<li class="tabbtn selected"><a href="${pageContext.request.contextPath}/${authUser.id}/admin/basic">기본설정</a></li>
 				<li class="tabbtn "><a href="${pageContext.request.contextPath}/${authUser.id}/admin/category">카테고리</a></li>
 				<li class="tabbtn"><a href="${pageContext.request.contextPath}/${authUser.id}/admin/writeForm">글작성</a></li>
 			</c:if>
